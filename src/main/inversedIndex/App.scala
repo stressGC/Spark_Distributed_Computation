@@ -10,5 +10,9 @@ object App
     println("Hello Scala")
     val rdd = ImportHelper.ReadFromFile("monsters.json", spark)
     println(">>IMPORT FINISHED")
+
+    println("before :", rdd.first())
+    val swappedRDD =Computing.SwapIndexesAndContent(rdd)
+    println("after :", swappedRDD.first())
   }
 }
