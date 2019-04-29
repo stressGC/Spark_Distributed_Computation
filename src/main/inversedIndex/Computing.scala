@@ -20,4 +20,12 @@ object Computing
   def SwapTuple(entry: (String, String)): (String, String) = {
     return (entry._2, entry._1)
   }
+
+  def join(JSONRDD : RDD[(String, String)], CSVRDD: RDD[(String, String)]): RDD[(String, String)] = {
+    return JSONRDD.union(CSVRDD)
+  }
+
+  def reduce(RDD: RDD[(String, String)]) : RDD[(String, String)] = {
+    return RDD.reduceByKey((acc, entry) => acc + ", " + entry)
+  }
 }

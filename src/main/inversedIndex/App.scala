@@ -8,11 +8,14 @@ object App
 
   def main(args:Array[String]){
     println("Hello Scala")
-    val rdd = ImportHelper.ReadFromFile("monsters.json", spark)
-    println(">>IMPORT FINISHED")
+    val RDDFromJSON = FSHelper.ReadJSONFromFile("monsters.json", spark)
+    val swappedRDDFromJSON =Computing.SwapIndexesAndContent(RDDFromJSON)
 
-    println("before :", rdd.first())
-    val swappedRDD =Computing.SwapIndexesAndContent(rdd)
-    println("after :", swappedRDD.first())
+    val RDDFromCSV = FSHelper.ReadCSVFromFile("out.csv", spark)
+
+    val joinedRDD = Computing.join(RDDFromCSV, swappedRDDFromJSON)
+
+    val finalRDD = Computing.reduce(joinedRDD)
+    FSHelper.RDDToFileSystem(finalRDD, "swappedRDD")
   }
 }
