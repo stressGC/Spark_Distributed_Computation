@@ -3,6 +3,8 @@ package fights
 import scala.math.abs
 
 class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, var coordX: Float, var coordY: Float, val speed: Int, val spell: Spell) {
+  private var isDead = false
+  private val helper = new Helper()
 
   def getX(): Float = {
     return this.coordX
@@ -20,12 +22,10 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
     return this.armor
   }
 
-  def setHealth(newValue: Int) : Unit = {
-    this.health = newValue
-  }
-
   def modifyHealth(difference: Int) : Unit = {
-    this.health += difference
+    if(this.health + difference <= 0) {
+      this.isDead = true
+    } else this.health += difference
   }
 
   def getClosestEntity(entity1: Entity, entity2: Entity) : Entity = {
@@ -33,10 +33,13 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
   }
 
   def attack(opponent: Entity) : Unit = {
-    // lets assume we got 1 attack
+    // lets get the damage of our spell
     val attackPower = this.spell.getDamages();
+
+    // lets get opponent armor
     val opponentArmor = opponent.getArmor();
 
+    // if we deal more than opponent has armor
     if (attackPower > opponentArmor) {
       println("(OK) spell : " + attackPower + " armor : " + opponentArmor)
       this.modifyHealth(attackPower)
@@ -46,12 +49,11 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
   }
 
   def moveInDirectionOf(entity: Entity) : Unit = {
-    val helper = new Helper()
     val distanceBetweenEntities: Float = helper.distanceBetween(this, entity)
 
     val minDistanceToHit = 10
 
-    // if about to collide, then we floor the coords
+    // if about to collide, then we round the coordinates
     if (distanceBetweenEntities - this.speed < minDistanceToHit) {
       this.coordX = entity.getX()
       this.coordY = entity.getY()

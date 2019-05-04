@@ -18,21 +18,23 @@ object App {
     allEntities += entity
     allEntities += entity2
 
-
-    /*
     val myVertices = helper.getEntitiesWithIndex(allEntities)
     myVertices.foreach(x => println("\nID = " + x._1 + ", " + x._2.toString))
-  */
 
-    var i = 0
-    while(i < 10) {
-      entity.attack(entity2)
-      entity2.attack(entity)
-      i = i + 1
-      println("-----------")
-      println(entity)
-      println(entity2)
-    }
+    var entities = new ArrayBuffer[Entity]()
+
+  }
+
+  def fightIteration(): Unit = {
+    /*
+    for each entity
+      -> regen
+      -> IA
+        -> move ?
+        -> attack
+      -> send message
+    */
+    var
   }
 }
 
