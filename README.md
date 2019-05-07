@@ -33,7 +33,9 @@ Here are the things we did implement:
 - 2D map
 - multiple opponents (no limit)
 - movements
-- attacks based on spells and minimum range
+- attacks based on spells
+- attacks based on range
+- attacks based on opponent armor
 - random computation of the damages dealt
 - death check
 - end of fight check
