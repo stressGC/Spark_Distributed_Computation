@@ -33,6 +33,7 @@ Here are the things we did implement:
 - random computation of the damages dealt
 - death check
 - end of fight check
+- logs in console so we can follow the fight
 
 Here are the things that could be improved:
 - optimisation on joins and aggregations
@@ -41,6 +42,7 @@ Here are the things that could be improved:
 - multiple spell per entity
 - multiple damage lines per spell
 - multiples actions per iteration
+- more understandable logs (UI ?)
 
 Since we encountered difficulties, we chose to focus on the Spark side of the problem, and less on the POO part of the problem.
 
