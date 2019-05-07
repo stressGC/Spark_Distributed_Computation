@@ -41,16 +41,20 @@ class Generator {
 
     /* 1x Solar */
     val greatSword = new Spell(name = "Great Sword", range = 30, min = 21, max = 24)
-    val solar = new Entity(name = "Solar", health = 364, armor = 44, regen = 15, speed = 50, spell = greatSword, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
+    val solar = new Entity(name = "Solar", health = 1364, armor = 44, regen = 15, speed = 50, spell = greatSword, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
     entities += solar
 
     /* 9x Worgs Rider */
     val battleAxe = new Spell(name = "Battle Axe", range = 15 , min = 3, max = 11)
     (1 to 9) foreach (x => {
-      entities += new Entity(name = "WorgRider_" + x, health = 13, armor = 18, regen = 0, speed = 50, spell = battleAxe, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
+      entities += new Entity(name = "WorgRider #" + x, health = 13, armor = 18, regen = 0, speed = 50, spell = battleAxe, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
     })
 
-    /* Barbares Orcs */
+    /* 4x Barbares Orcs */
+    val greatAxe = new Spell(name = "Great Axe", range = 10 , min = 11, max = 23)
+    (1 to 9) foreach (x => {
+      entities += new Entity(name = "Barbares Orcs #" + x, health = 42, armor = 15, regen = 0, speed = 30, spell = greatAxe, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
+    })
 
     /* Warlord */
 /*

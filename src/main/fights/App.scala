@@ -1,6 +1,6 @@
 package fights
 
-import org.apache.spark.graphx.{EdgeContext, Graph, TripletFields}
+import org.apache.spark.graphx.{Graph, TripletFields}
 import org.apache.spark.{SparkConf, SparkContext}
 
 
@@ -67,7 +67,7 @@ object App {
 
             if (distance < maxAttackRange) {
               // attack
-              println(">>ATTACK : {" + dest.getName() + "} RANGE{" + maxAttackRange + "}, DISTANCE{" + distance + "}")
+              println(">>ATTACK {" + dest.getName() + "} WITH {" + src.getSpell().getName() + "} // RANGE{" + maxAttackRange + "}, DISTANCE{" + distance + "}")
               src.attack(dest)
             } else {
               // move
@@ -85,15 +85,13 @@ object App {
           }
         )
 
-        /*
         localGraph = localGraph.joinVertices(messageDamage) {
           (VertexID, psrc, msgrecu) => {
-            print("here")
             msgrecu._1.modifyHealth(-msgrecu._2)
             msgrecu._1
           }
         }
-        */
+
       }
 
       return true

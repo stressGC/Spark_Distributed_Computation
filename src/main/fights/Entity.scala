@@ -58,7 +58,7 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
     // if we deal more than opponent has armor
     if (attackPower > opponentArmor) {
       println(">>(OK) : DMG{" + attackPower + "}, ARMOR{" + opponentArmor + "}")
-      this.modifyHealth(-attackPower)
+      opponent.modifyHealth(-attackPower)
     } else {
       println(">>(FAIL) : DMG{" + attackPower + "}, ARMOR{" + opponentArmor + "}")
     }
