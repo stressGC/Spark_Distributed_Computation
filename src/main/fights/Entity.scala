@@ -1,10 +1,15 @@
 package fights
 
-import scala.math.abs
+class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, var coordX: Float, var coordY: Float, val speed: Int, val spell: Spell) extends Serializable {
+  private val helper = new MathHelper()
+  private val maxHealth = this.health
 
-class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, var coordX: Float, var coordY: Float, val speed: Int, val spell: Spell) {
-  private var isDead = false
-  private val helper = new Helper()
+  def getSpell() : Spell = {
+    return this.spell
+  }
+  def getName() : String = {
+    return this.name
+  }
 
   def getX(): Float = {
     return this.coordX
@@ -23,13 +28,24 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
   }
 
   def modifyHealth(difference: Int) : Unit = {
+    if(difference < 0) {
+      println(">>" + this.name + " LOST {" + difference + "} HP, FROM {" + this.health + "} TO {" + (this.health + difference) + "}")
+    }
     if(this.health + difference <= 0) {
-      this.isDead = true
-    } else this.health += difference
+      println(">>" + this.name + " IS DEAD")
+    }
+    this.health += difference
   }
 
-  def getClosestEntity(entity1: Entity, entity2: Entity) : Entity = {
-    return entity1
+  def applyRegen() : Unit = {
+    var msg = ""
+    if(this.getHealth() + this.regen > this.maxHealth) {
+      msg = (this.maxHealth - this.getHealth()).toString
+    } else {
+      this.modifyHealth(this.regen)
+      msg = this.regen.toString
+    }
+    println(">>REGEN {+" + msg + "}, NOW {" + this.health + "}")
   }
 
   def attack(opponent: Entity) : Unit = {
@@ -41,10 +57,10 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
 
     // if we deal more than opponent has armor
     if (attackPower > opponentArmor) {
-      println("(OK) spell : " + attackPower + " armor : " + opponentArmor)
-      this.modifyHealth(attackPower)
+      println(">>(OK) : DMG{" + attackPower + "}, ARMOR{" + opponentArmor + "}")
+      this.modifyHealth(-attackPower)
     } else {
-      println("(FAIL) spell : " + attackPower + " armor : " + opponentArmor)
+      println(">>(FAIL) : DMG{" + attackPower + "}, ARMOR{" + opponentArmor + "}")
     }
   }
 
@@ -55,20 +71,28 @@ class Entity(val name: String, val armor: Int, val regen: Int, var health: Int, 
 
     // if about to collide, then we round the coordinates
     if (distanceBetweenEntities - this.speed < minDistanceToHit) {
+      println(">>ABOUT TO COLLIDE: SAME COORDINATES : {" + this.getName() + "," + entity.getName() + "}")
       this.coordX = entity.getX()
       this.coordY = entity.getY()
 
     } else {
       // pythagorus theorem
-      val diffX: Float = abs(entity.getX() - this.coordX)
-      val diffY: Float = abs(entity.getY() - this.coordY)
+      val diffX: Float = entity.getX() - this.coordX
+      val diffY: Float = entity.getY() - this.coordY
 
       val moveX: Float = this.speed * (diffX / distanceBetweenEntities) // cosinus teta
       val moveY: Float = this.speed * (diffY / distanceBetweenEntities) // sinus teta
-
       this.coordX += moveX
       this.coordY += moveY
+
+      println(">>" + this.getName() + " MOVING TOWARDS " + entity.getName() + " BY (" + moveX + "," + moveY + ") => (" + this.getX() + "," + this.getY() + ")")
+
+      println(">>DISTANCE IS NOW : " + helper.distanceBetween(this, entity))
     }
+  }
+
+  def printSummary() : Unit = {
+    println(this.getName() + ", PV = " + this.getHealth() + " @ (" + this.getX() + ", " + this.getY() + ")")
   }
 
   override def toString: String = {

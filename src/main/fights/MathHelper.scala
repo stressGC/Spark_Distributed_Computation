@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom
 import scala.collection.mutable.ArrayBuffer
 import scala.math.sqrt
 import scala.math.pow
-class Helper {
+class MathHelper extends Serializable {
 
   def getRandom(min: Int, max: Int) : Int = {
     val random: ThreadLocalRandom = ThreadLocalRandom.current()
@@ -23,5 +23,10 @@ class Helper {
   def getEntitiesWithIndex(entities: ArrayBuffer[Entity]) : ArrayBuffer[(Int, Entity)] = {
     /* taken from https://alvinalexander.com/scala/how-to-use-zipwithindex-create-for-loop-counters-scala-cookbook */
     return entities.zipWithIndex.map{ case(entity , count) => (count, entity) }
+  }
+
+  def closestEntityLogic(entity: (Entity, Entity, Long), entity2: (Entity, Entity, Long)): (Entity, Entity, Long) = {
+    if (entity._3 < entity2._3) return entity2
+    return entity2
   }
 }

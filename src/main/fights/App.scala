@@ -1,40 +1,109 @@
 package fights
 
-import scala.collection.mutable.ArrayBuffer
+import org.apache.spark.graphx.{EdgeContext, Graph, TripletFields}
+import org.apache.spark.{SparkConf, SparkContext}
+
 
 object App {
+  val generator = new Generator()
+  val mathHelper = new MathHelper()
+  val graphHelper = new GraphHelper()
+
   def main(args: Array[String]): Unit = {
-    println("Hello, world!")
-    val helper = new Helper()
 
-    val spellA = new Spell("spellA", 100, 5, 15)
-    val spellB = new Spell("spellB", 100, 5, 22)
+    val options = new SparkConf().setAppName("EXO2").setMaster("local[*]")
+    val sparkContext = new SparkContext(options)
+    sparkContext.setLogLevel("ERROR")
 
-    val entity = new Entity("entity1", 15, 10, 10, helper.getRandom(0, 1000), helper.getRandom(0, 1000), 20, spellA)
-    val entity2 = new Entity("entity2", 15, 10, 10, helper.getRandom(0, 1000), helper.getRandom(0, 1000), 20, spellB)
+    val graph = generator.generateFightOne(sparkContext)
 
-
-    var allEntities = new ArrayBuffer[Entity]()
-    allEntities += entity
-    allEntities += entity2
-
-    val myVertices = helper.getEntitiesWithIndex(allEntities)
-    myVertices.foreach(x => println("\nID = " + x._1 + ", " + x._2.toString))
-
-    var entities = new ArrayBuffer[Entity]()
-
+    this.launchComputation(graph, 20, sparkContext)
   }
 
-  def fightIteration(): Unit = {
-    /*
-    for each entity
-      -> regen
-      -> IA
-        -> move ?
-        -> attack
-      -> send message
-    */
-    var
+  def launchComputation(graph: Graph[Entity, Int], maxIterations: Int = 50, context: SparkContext): Unit = {
+    var counter = 0
+    val fields = new TripletFields(true, false, false) //join strategy
+
+    def fightIteration: Boolean = {
+      var localGraph = graph // let's copy the base graph so we can modify it
+      while (true) {
+        counter += 1
+
+        if (counter >= maxIterations) return false;
+
+        println("\nITERATION " + counter)
+
+        /* https://spark.apache.org/docs/1.2.1/graphx-programming-guide.html#aggregate-messages-aggregatemessages */
+
+        val messages = localGraph.aggregateMessages[(Entity, Entity, Long)](
+          graphHelper.sendPosition,
+          mathHelper.closestEntityLogic
+          //fields //use an optimized join strategy (we don't need the edge attribute)
+        )
+
+        if (messages.isEmpty()) {
+          println("\n\n*** FIGHT IS FINISHED ***")
+          return false
+        }
+
+        /* https://spark.apache.org/docs/latest/graphx-programming-guide.html#join_operators */
+        localGraph = localGraph.joinVertices(messages) {
+          (vertexID, pSrc, message) => {
+            val src = message._1 // source
+            val dest = message._2 // cible la plus proche
+            val distance = message._3 // distance entre les deux
+            println("=====================")
+            println("*** " + src.getName().toUpperCase() + " ***")
+            /*
+          println("ID = " + vertexID.toString)
+          println("source :" + pSrc.getName())
+          println("source : " + src.getName() + ", dest = " + dest.getName() + ", distance = " + distance)
+  */
+            val maxAttackRange = src.getSpell().getRange()
+            //println("ranges : " + maxAttackRange + " / " + distance + " ")
+
+            /* apply regeneration */
+            src.applyRegen()
+
+            if (distance < maxAttackRange) {
+              // attack
+              println(">>ATTACK : RANGE{" + maxAttackRange + "}, DISTANCE{" + distance + "}")
+              src.attack(dest)
+            } else {
+              // move
+              println(">>MOVE")
+              src.moveInDirectionOf(dest)
+            }
+            src
+          }
+        }
+
+        val messageDamage = localGraph.aggregateMessages[(Entity, Int)](
+          graphHelper.sendDamage,
+          (a, b) => {
+            (a._1, a._2 + b._2)
+          }
+        )
+
+        /*
+        localGraph = localGraph.joinVertices(messageDamage) {
+          (VertexID, psrc, msgrecu) => {
+            print("here")
+            msgrecu._1.modifyHealth(-msgrecu._2)
+            msgrecu._1
+          }
+        }
+        */
+      }
+
+      return true
+    }
+
+    fightIteration
   }
+
+
+
+
 }
 
