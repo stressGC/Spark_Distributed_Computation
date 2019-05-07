@@ -88,5 +88,4 @@ class GraphHelper {
       edgeC.sendToDst((edgeC.dstAttr, damages))
     }
   }
-
 }
