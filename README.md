@@ -1,5 +1,7 @@
 # FINAL PROJECT - BDDR @ UQAC
 
+This project has been made for the final part of the BDDR course @ UQAC. A demo is accessible [there](https://github.com/stressGC/Spark_Distributed_Computation/blob/master/demo.mp4?raw=true).
+
 ## I] Requirements
 
 - Java
