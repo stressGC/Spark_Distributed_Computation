@@ -1,21 +1,29 @@
+/**
+  * @author Georges Cosson
+  */
 package formatCrawl
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.{SparkSession}
 
 object App
 {
   val spark: SparkSession = SparkSession.builder.master("local").getOrCreate
 
+  /**
+    * entry of our program, does the RDD manipulation for the second part of the first exercice
+    * @param args
+    */
   def main(args:Array[String]){
-    println("Hello Scala")
+    // lets read our file
     val RDDFromJSON = FSHelper.ReadJSONFromFile("monsters.json", spark)
-    val swappedRDDFromJSON =Computing.SwapIndexesAndContent(RDDFromJSON)
 
-    val RDDFromCSV = FSHelper.ReadCSVFromFile("out.csv", spark)
+    // lets swap indexes
+    val swappedRDDFromJSON = Computing.SwapIndexesAndContent(RDDFromJSON)
 
-    val joinedRDD = Computing.join(RDDFromCSV, swappedRDDFromJSON)
+    // lets reduce our RDD
+    val finalRDD = Computing.reduce(swappedRDDFromJSON)
 
-    val finalRDD = Computing.reduce(joinedRDD)
+    // and write it to filesystem
     FSHelper.RDDToFileSystem(finalRDD, "swappedRDD")
   }
 }
