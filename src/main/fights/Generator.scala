@@ -58,17 +58,7 @@ class Generator {
 
     /* Warlord */
 /*
-    val spellA = new Spell("spellA", 100, 5, 15)
-    val spellB = new Spell("spellB", 100, 18, 28)
 
-    val entity = new Entity("entity1", 10, 10, 50, mathHelper.getRandom(0, 400), mathHelper.getRandom(0, 400), 20, spellA)
-    val entity3 = new Entity("entity3", 10, 10, 50, mathHelper.getRandom(0, 400), mathHelper.getRandom(0, 400), 20, spellA)
-    val entity2 = new Entity("entity2", 12, 10, 80, mathHelper.getRandom(0, 400), mathHelper.getRandom(0, 400), 20, spellB)
-
-
-    entities += entity
-    entities += entity2
-    entities += entity3
 */
     return entities
   }

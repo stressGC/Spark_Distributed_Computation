@@ -79,7 +79,7 @@ object App {
         }
 
         val messageDamage = localGraph.aggregateMessages[(Entity, Int)](
-          graphHelper.sendDamage,
+          graphHelper.sendDamagesToDest,
           (a, b) => {
             (a._1, a._2 + b._2)
           }

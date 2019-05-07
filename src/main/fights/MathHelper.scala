@@ -42,16 +42,6 @@ class MathHelper extends Serializable {
   }
 
   /**
-    * zips the entity array with index, to be used later
-    * @param entities
-    * @return
-    */
-  def getEntitiesWithIndex(entities: ArrayBuffer[Entity]) : ArrayBuffer[(Int, Entity)] = {
-    /* taken from https://alvinalexander.com/scala/how-to-use-zipwithindex-create-for-loop-counters-scala-cookbook */
-    return entities.zipWithIndex.map{ case(entity , count) => (count, entity) }
-  }
-
-  /**
     * utility function used by the aggregateMessage to determine which entity is the closest
     * @param entity
     * @param entity2
