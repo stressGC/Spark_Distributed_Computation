@@ -17,7 +17,7 @@ object App {
 
     val graph = generator.generateFightOne(sparkContext)
 
-    this.launchComputation(graph, 20, sparkContext)
+    this.launchComputation(graph, 100, sparkContext)
   }
 
   def launchComputation(graph: Graph[Entity, Int], maxIterations: Int = 50, context: SparkContext): Unit = {
@@ -67,7 +67,7 @@ object App {
 
             if (distance < maxAttackRange) {
               // attack
-              println(">>ATTACK : RANGE{" + maxAttackRange + "}, DISTANCE{" + distance + "}")
+              println(">>ATTACK : {" + dest.getName() + "} RANGE{" + maxAttackRange + "}, DISTANCE{" + distance + "}")
               src.attack(dest)
             } else {
               // move

@@ -27,6 +27,33 @@ class Generator {
   }
 
   def getFightOneEntities() : ArrayBuffer[Entity] = {
+    /*
+      1 Solar
+      vs
+      9 Worgs Rider
+      4 Barbares Orcs
+      1 Warlord
+
+       name healPoint healPointMax armor weaponArray x y peed regeneration
+     */
+
+    var entities = new ArrayBuffer[Entity]()
+
+    /* 1x Solar */
+    val greatSword = new Spell(name = "Great Sword", range = 30, min = 21, max = 24)
+    val solar = new Entity(name = "Solar", health = 364, armor = 44, regen = 15, speed = 50, spell = greatSword, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
+    entities += solar
+
+    /* 9x Worgs Rider */
+    val battleAxe = new Spell(name = "Battle Axe", range = 15 , min = 3, max = 11)
+    (1 to 9) foreach (x => {
+      entities += new Entity(name = "WorgRider_" + x, health = 13, armor = 18, regen = 0, speed = 50, spell = battleAxe, coordX = mathHelper.getRandom(0, 500), coordY = mathHelper.getRandom(0, 500))
+    })
+
+    /* Barbares Orcs */
+
+    /* Warlord */
+/*
     val spellA = new Spell("spellA", 100, 5, 15)
     val spellB = new Spell("spellB", 100, 18, 28)
 
@@ -34,12 +61,11 @@ class Generator {
     val entity3 = new Entity("entity3", 10, 10, 50, mathHelper.getRandom(0, 400), mathHelper.getRandom(0, 400), 20, spellA)
     val entity2 = new Entity("entity2", 12, 10, 80, mathHelper.getRandom(0, 400), mathHelper.getRandom(0, 400), 20, spellB)
 
-    var entities = new ArrayBuffer[Entity]()
 
     entities += entity
     entities += entity2
     entities += entity3
-
+*/
     return entities
   }
 }
